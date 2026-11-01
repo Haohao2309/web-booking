@@ -12,7 +12,7 @@ npm run dev
 
 Mặc định browser gọi `/api`; Vite proxy tới `http://localhost:8080`. Sửa `API_PROXY_TARGET` nếu backend dùng địa chỉ khác, rồi khởi động lại Vite. Dev server cố định cổng 5173 để khớp CORS. Biến VITE_* công khai trong bundle, không đặt secret vào đây. Backend không chạy sẽ hiện lỗi kết nối, không tạo dữ liệu giả.
 
-Backend: [Haohao2309/my-api](https://github.com/Haohao2309/my-api). Bản setup nền tảng cung cấp PostgreSQL, health, CSRF, security và CI; **chưa triển khai đăng nhập/đăng ký/phòng/đặt phòng**. Các màn hình nghiệp vụ chưa hoạt động xuyên suốt cho tới khi các API này được bổ sung.
+Backend: [Haohao2309/api-booking](https://github.com/Haohao2309/api-booking). Bản setup nền tảng cung cấp PostgreSQL, health, CSRF, security và CI; **chưa triển khai đăng nhập/đăng ký/phòng/đặt phòng**. Các màn hình nghiệp vụ chưa hoạt động xuyên suốt cho tới khi các API này được bổ sung.
 
 Sau khi chạy backend theo README của repository đó, kiểm tra `http://localhost:8080/api/health` và `http://localhost:5173/api/health`: cả hai phải trả `{"status":"UP"}`. Endpoint `/api/auth/csrf` trả token gắn với phiên, không phải thông tin tài khoản.
 
@@ -49,7 +49,7 @@ Khi host SPA, rewrite URL ứng dụng về index.html, nhưng không rewrite c�
 
 ## Hợp đồng REST đề xuất — phải đối chiếu backend thực tế
 
-Đã đối chiếu backend Spring Boot trong `my-api`: chỉ health và CSRF được triển khai ở bước setup. Các endpoint nghiệp vụ, tên field và response dưới đây vẫn là hợp đồng cho giai đoạn tiếp theo. Xác thực dự kiến dùng session cookie HttpOnly; không lưu token vào localStorage.
+Đã đối chiếu backend Spring Boot trong `api-booking`: chỉ health và CSRF được triển khai ở bước setup. Các endpoint nghiệp vụ, tên field và response dưới đây vẫn là hợp đồng cho giai đoạn tiếp theo. Xác thực dự kiến dùng session cookie HttpOnly; không lưu token vào localStorage.
 
 Base URL ví dụ: `http://localhost:8080/api`. Response JSON trực tiếp, không bọc thêm `data`. Danh sách trả `{ "items": [...] }`; phiên bản hiện tại yêu cầu danh sách đầy đủ, chưa hỗ trợ phân trang server. ID là string hoặc số dương. Ngày lưu trú `YYYY-MM-DD`, giá VND dạng number.
 
