@@ -10,7 +10,11 @@ Copy-Item .env.example .env.local
 npm run dev
 ```
 
-Sửa `VITE_API_BASE_URL` cho đúng backend rồi khởi động lại Vite. Biến VITE_* công khai trong bundle, không đặt secret vào đây. Nếu không cấu hình, request tới `/api` cùng origin; Vite hiện không cấu hình proxy. Backend không chạy sẽ hiện lỗi kết nối, không tạo dữ liệu giả.
+Mặc định browser gọi `/api`; Vite proxy tới `http://localhost:8080`. Sửa `API_PROXY_TARGET` nếu backend dùng địa chỉ khác, rồi khởi động lại Vite. Dev server cố định cổng 5173 để khớp CORS. Biến VITE_* công khai trong bundle, không đặt secret vào đây. Backend không chạy sẽ hiện lỗi kết nối, không tạo dữ liệu giả.
+
+Backend: [Haohao2309/api-booking](https://github.com/Haohao2309/api-booking). Bản setup nền tảng cung cấp PostgreSQL, health, CSRF, security và CI; **chưa triển khai đăng nhập/đăng ký/phòng/đặt phòng**. Các màn hình nghiệp vụ chưa hoạt động xuyên suốt cho tới khi các API này được bổ sung.
+
+Sau khi chạy backend theo README của repository đó, kiểm tra `http://localhost:8080/api/health` và `http://localhost:5173/api/health`: cả hai phải trả `{"status":"UP"}`. Endpoint `/api/auth/csrf` trả token gắn với phiên, không phải thông tin tài khoản.
 
 ```powershell
 npm run lint
@@ -18,7 +22,7 @@ npm test
 npm run build
 ```
 
-Khi host SPA, rewrite URL ứng dụng về index.html, nhưng không rewrite các request API.
+Khi host SPA, rewrite URL ứng dụng về index.html, nhưng không rewrite các request API. Vite proxy chỉ dùng cho dev; production cần reverse proxy `/api` tới backend hoặc cấu hình `VITE_API_BASE_URL` là URL API và CORS tương ứng. Bật cookie Secure qua HTTPS. CI GitHub Actions chạy npm ci, lint, test và build trên PR/push main.
 
 ## Đánh giá project ban đầu và thay đổi
 
@@ -45,12 +49,14 @@ Khi host SPA, rewrite URL ứng dụng về index.html, nhưng không rewrite c�
 
 ## Hợp đồng REST đề xuất — phải đối chiếu backend thực tế
 
-Hiện workspace không có backend/OpenAPI. Các endpoint, tên field và cookie dưới đây là quy ước triển khai mới, chưa được xác minh với server của bạn. Nếu backend hiện dùng JWT Bearer hoặc cấu trúc `{ data: ... }`, cần sửa adapter `src/api` và store cho phù hợp trước khi tích hợp; không bật song song hai kiểu phiên một cách ngầm định.
+Đã đối chiếu backend Spring Boot trong `api-booking`: chỉ health và CSRF được triển khai ở bước setup. Các endpoint nghiệp vụ, tên field và response dưới đây vẫn là hợp đồng cho giai đoạn tiếp theo. Xác thực dự kiến dùng session cookie HttpOnly; không lưu token vào localStorage.
 
 Base URL ví dụ: `http://localhost:8080/api`. Response JSON trực tiếp, không bọc thêm `data`. Danh sách trả `{ "items": [...] }`; phiên bản hiện tại yêu cầu danh sách đầy đủ, chưa hỗ trợ phân trang server. ID là string hoặc số dương. Ngày lưu trú `YYYY-MM-DD`, giá VND dạng number.
 
 | Method | Path | Request / Response |
 | --- | --- | --- |
+| GET | /health | Đã triển khai: `{"status":"UP"}` khi database kết nối được |
+| GET | /auth/csrf | Đã triển khai: `{headerName:"X-CSRF-TOKEN",token}` + cookie phiên |
 | GET | /auth/me | User; 401 khi chưa đăng nhập |
 | POST | /auth/login | `{email,password}` → User + Set-Cookie phiên |
 | POST | /auth/register | `{name,email,password}` → 201; không tự đăng nhập |
@@ -78,7 +84,7 @@ Lỗi: HTTP 400/422 validation, 401 chưa đăng nhập, 403 thiếu quyền, 40
 ## Backend bắt buộc để hệ thống hoạt động đúng
 
 1. Xác thực và phân quyền trên từng endpoint; giới hạn truy vấn theo chủ đơn. Sửa role trong trình duyệt không được tạo quyền backend.
-2. Cookie phiên HttpOnly, Secure khi HTTPS, SameSite phù hợp triển khai; CORS cho đúng origin frontend và credentials, không dùng wildcard. Axios gửi cookie và X-XSRF-TOKEN theo cookie XSRF-TOKEN. Backend phải cấp token CSRF đọc được ở origin frontend và xác minh các request thay đổi dữ liệu, kể cả login/logout; cấu hình khác domain cần thiết kế lại cách cấp token.
+2. Cookie phiên HttpOnly, Secure khi HTTPS, SameSite phù hợp triển khai; CORS cho đúng origin frontend và credentials, không dùng wildcard. Axios gọi GET `/auth/csrf` trước mỗi POST/PATCH/DELETE, sau đó gửi token JSON trong header `X-CSRF-TOKEN`. Spring Security lưu token theo session và xác minh cả endpoint đăng nhập. Không tự retry mutation khi CSRF hoặc mạng lỗi. Cấu hình khác site cần xem lại SameSite/cookie và chính sách chặn third-party cookie; ưu tiên reverse proxy cùng origin.
 3. Kiểm tra ngày, sức chứa, giá và trạng thái trên server; tự tính tổng tiền, không nhận tổng tiền client gửi.
 4. Kiểm tra trùng lịch trong transaction/lock hoặc ràng buộc DB. Trả 409 khi hai người đặt cùng phòng. Nên bổ sung idempotency khi hợp đồng server hỗ trợ để chống lặp request do retry/mất mạng.
 5. Quy định rõ thời gian check-in/out, thời hạn giữ phòng, chính sách hủy, múi giờ cơ sở và các chuyển trạng thái hợp lệ. Không cho ngừng kinh doanh phòng phá các đơn đã xác nhận.
@@ -88,4 +94,4 @@ Lỗi: HTTP 400/422 validation, 401 chưa đăng nhập, 403 thiếu quyền, 40
 
 Chưa triển khai thanh toán/hoàn tiền, hóa đơn, quản lý tài khoản nhân viên, báo cáo doanh thu, quên mật khẩu/xác minh email, hồ sơ khách, dịch vụ phụ và housekeeping. Những phần này không có hợp đồng API hay yêu cầu trong repository để triển khai chính xác; không nên dựng nút giả. Tìm kiếm/phân trang dữ liệu lớn cần bổ sung hợp đồng phân trang và giao diện tương ứng.
 
-Chưa kiểm thử tích hợp backend, phân quyền server, cuộc đua đặt trùng, cookie/CORS/CSRF hoặc thanh toán. Kiểm thử Node hiện kiểm tra validator; lint/build không thay thế kiểm thử end-to-end. Cần chạy nghiệm thu trên trình duyệt với backend và ba tài khoản thật: truy cập URL trái quyền, phiên hết hạn, lỗi mạng, tạo/hủy đơn, check-in/out, chỉnh sửa phòng, viewport di động.
+Kiểm thử Node gồm validator và Axios adapter: gửi CSRF trước mutation, dừng khi lấy token lỗi, lấy lại token mỗi lần và xử lý 401. Backend có kiểm thử health, CORS, CSRF theo phiên và các rule role. Chưa có kiểm thử nghiệp vụ end-to-end, cuộc đua đặt trùng hoặc thanh toán. Cần chạy nghiệm thu trên trình duyệt với ba tài khoản thật sau khi backend có API nghiệp vụ.
