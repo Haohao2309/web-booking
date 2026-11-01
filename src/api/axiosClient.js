@@ -1,19 +1,9 @@
-import axios from 'axios';
+import { createApiClient } from './createApiClient'
 
-const axiosClient = axios.create({
+const axiosClient = createApiClient({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  withCredentials: true,
-  timeout: 15000,
-  withXSRFToken: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  onUnauthorized: () => window.dispatchEvent(new Event('auth:expired')),
 });
-
-axiosClient.interceptors.response.use((response) => response.data, (error) => {
-  if (error.response?.status === 401 && !error.config?.url?.startsWith('/auth/')) window.dispatchEvent(new Event('auth:expired'))
-  return Promise.reject(error)
-})
 export function errorMessage(error) {
   if (error.response?.status === 401) return 'Phiên hết hạn hoặc thông tin đăng nhập không đúng.'
   if (error.response?.status === 403) return 'Bạn không có quyền thực hiện thao tác này.'
