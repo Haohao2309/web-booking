@@ -2,6 +2,12 @@
 
 Frontend (View) cho dự án cho thuê phòng: CUSTOMER, RECEPTIONIST, ADMIN. Backend REST riêng giữ nghiệp vụ và dữ liệu. Đây là frontend tích hợp API, không phải bản demo có database hoặc backend kèm theo.
 
+Quy trình áp dụng cho chức năng mới, mở rộng đối tượng và sửa lỗi: [Quy chuẩn phát triển chức năng View–Model–Controller](docs/QUY-TRINH-PHAT-TRIEN-CHUC-NANG.md).
+
+**Bắt buộc khi bàn giao:** mỗi công việc có bản ghi trong `docs/changes/`, nêu chức năng đã làm, file thay đổi/lý do, kiểm tra và giới hạn. Dùng [mẫu bàn giao](docs/templates/FEATURE-REPORT.md); xem [bản ghi cập nhật quy chuẩn](docs/changes/2026-11-02-quy-chuan-va-tai-lieu-ban-giao.md).
+
+**Quy chuẩn mới đã chốt:** JSON API dùng `{success, message, data, status}`, mọi API danh sách phân trang server. Xem [Response và phân trang](docs/API-CONTRACT.md). Code hiện vẫn dùng contract cũ ở phần dưới; cần chuyển đổi backend/frontend/test/CI đồng bộ trước khi áp dụng runtime.
+
 ## Chạy local
 
 ```powershell
@@ -51,7 +57,7 @@ Khi host SPA, rewrite URL ứng dụng về index.html, nhưng không rewrite c�
 
 Đã đối chiếu backend Spring Boot trong `api-booking`: chỉ health và CSRF được triển khai ở bước setup. Các endpoint nghiệp vụ, tên field và response dưới đây vẫn là hợp đồng cho giai đoạn tiếp theo. Xác thực dự kiến dùng session cookie HttpOnly; không lưu token vào localStorage.
 
-Base URL ví dụ: `http://localhost:8080/api`. Response JSON trực tiếp, không bọc thêm `data`. Danh sách trả `{ "items": [...] }`; phiên bản hiện tại yêu cầu danh sách đầy đủ, chưa hỗ trợ phân trang server. ID là string hoặc số dương. Ngày lưu trú `YYYY-MM-DD`, giá VND dạng number.
+**Contract runtime cũ, chưa chuyển đổi:** Base URL ví dụ `http://localhost:8080/api`. Response JSON trực tiếp, danh sách `{ "items": [...] }`; phiên bản code hiện tại chưa hỗ trợ phân trang server. Hợp đồng mục tiêu thay thế nằm ở [Response và phân trang](docs/API-CONTRACT.md), bao gồm envelope và `data: {items, page, size, totalItems, totalPages}`. ID là string hoặc số dương. Ngày lưu trú `YYYY-MM-DD`, giá VND dạng number.
 
 | Method | Path | Request / Response |
 | --- | --- | --- |
