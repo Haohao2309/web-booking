@@ -54,5 +54,37 @@ main { max-width: 1216px; margin: auto; padding: 40px 24px 80px; min-height: cal
 footer { padding: 24px 32px; border-top: 1px solid #dce3db; display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 1px; }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 12px; top: 12px; background: white; padding: 12px; z-index: 10; }
+.auth-shell { min-height: 650px; max-width: 1080px; margin: 8px auto 0; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; border: 1px solid #cfe0d8; border-radius: 24px; background: #fff; box-shadow: 0 24px 70px rgba(28, 86, 67, .14); }
+.auth-visual { position: relative; overflow: hidden; display: flex; align-items: center; min-height: 650px; padding: 56px; color: #fff; background: linear-gradient(145deg, #123f35 0%, #1f6b59 56%, #55a984 100%); }
+.auth-visual::after { content: ""; position: absolute; right: -110px; bottom: -120px; width: 360px; height: 360px; border: 1px solid rgba(255,255,255,.22); border-radius: 50%; box-shadow: 0 0 0 38px rgba(255,255,255,.06), 0 0 0 76px rgba(255,255,255,.04); }
+.auth-visual-content { position: relative; z-index: 1; max-width: 390px; }
+.auth-logo { margin: 0 0 90px; color: #fff; font-size: 15px; font-weight: 800; letter-spacing: 2.5px; }
+.auth-eyebrow { color: #c9ead8; }
+.auth-visual h1 { margin: 16px 0 24px; color: #fff; font-size: clamp(38px, 5vw, 58px); letter-spacing: -2px; }
+.auth-visual-copy { max-width: 340px; color: #e3f3eb; line-height: 1.75; }
+.auth-trust { display: flex; align-items: center; gap: 12px; margin-top: 60px; color: #e3f3eb; font-size: 13px; line-height: 1.5; }
+.auth-trust strong { color: #fff; }
+.auth-trust-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: #176258; background: #fff; font-weight: 800; }
+.auth-visual-orb { position: absolute; border-radius: 50%; background: rgba(255,255,255,.10); }
+.auth-visual-orb-one { width: 170px; height: 170px; top: -70px; right: 90px; }
+.auth-visual-orb-two { width: 70px; height: 70px; top: 170px; right: 40px; background: rgba(190,225,255,.2); }
+.auth-card { align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding: 62px 72px; border: 0; border-radius: 0; }
+.auth-card-heading h2 { margin: 13px 0 10px; color: #102c5a; font-size: 34px; letter-spacing: -1px; }
+.auth-card-heading p:last-child { margin-bottom: 30px; color: #71809a; }
+.auth-form label { color: #273b61; }
+.auth-form input { min-height: 48px; border-color: #c9ddd3; border-radius: 10px; color: #203c39; }
+.auth-form input::placeholder { color: #a2aec0; }
+.auth-form input:focus { border-color: #2c8069; box-shadow: 0 0 0 4px rgba(44,128,105,.14); outline: 0; }
+.auth-form-options { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: -2px 0 22px; font-size: 12px; }
+.auth-form-options a { color: #176258; font-weight: 700; text-decoration: none; }
+.remember { display: flex; align-items: center; gap: 7px; margin: 0; font-size: 12px !important; font-weight: 500 !important; color: #71809a !important; }
+.remember input { width: 15px; min-height: 15px; accent-color: #176258; }
+.auth-submit { width: 100%; min-height: 50px; border-radius: 10px; background: #176258; box-shadow: 0 10px 20px rgba(23,98,88,.2); }
+.auth-submit:hover:not(:disabled) { background: #123f35; }
+.auth-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 14px; color: #a2aec0; font-size: 12px; }
+.auth-divider::before, .auth-divider::after { content: ""; height: 1px; flex: 1; background: #e2e8f1; }
+.auth-register { margin: 0; text-align: center; color: #71809a; font-size: 13px; }
+.auth-register a { color: #176258; font-weight: 700; text-decoration: none; }
+@media (max-width: 760px) { .auth-shell { grid-template-columns: 1fr; margin-top: 0; border-radius: 18px; } .auth-visual { min-height: 300px; padding: 34px; } .auth-logo { margin-bottom: 46px; } .auth-visual h1 { font-size: 40px; } .auth-trust { margin-top: 28px; } .auth-card { padding: 42px 28px; } }
 @media (max-width: 850px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .search { grid-template-columns: 1fr 1fr; } .admin-layout { grid-template-columns: 1fr; } .account { margin-left: 0; } }
 @media (max-width: 540px) { .grid, .search { grid-template-columns: 1fr; } .hero { padding: 28px; } .nav { padding: 20px; gap: 18px; } main { padding: 24px 16px 50px; } .section-heading { display: block; margin-bottom: 20px; } footer { gap: 20px; flex-wrap: wrap; } }
