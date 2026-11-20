@@ -8,6 +8,7 @@ export function errorMessage(error) {
   if (error.response?.status === 401) return 'Phiên hết hạn hoặc thông tin đăng nhập không đúng.'
   if (error.response?.status === 403) return 'Bạn không có quyền thực hiện thao tác này.'
   if (error.response?.status === 409) return error.response.data?.message || 'Email đã được đăng ký. Vui lòng dùng email khác.'
+  if (error.response?.status === 404) return error.response.data?.message || 'Email không tồn tại trong hệ thống.'
   return error.response ? (error.response.data?.message || 'Yêu cầu thất bại. Vui lòng thử lại.') : 'Không kết nối được API. Kiểm tra backend và cấu hình kết nối.'
 }
 
