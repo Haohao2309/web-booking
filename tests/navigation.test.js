@@ -6,7 +6,7 @@ const paths = (items) => items.map((item) => item.to)
 
 test('guest sees only public entries and no admin or account menu', () => {
   const menu = menuFor(undefined)
-  assert.deepEqual(paths(menu.main), ['/', '/services', '/suggestions'])
+  assert.deepEqual(paths(menu.main), ['/', '/rooms', '/services', '/suggestions'])
   assert.deepEqual(menu.admin, [])
   assert.deepEqual(menu.account, [])
 })
@@ -24,10 +24,9 @@ test('each role sees only the screens its routes allow', () => {
 
 test('planned entries keep the same guard as their menu visibility', () => {
   const byPath = Object.fromEntries(plannedRoutes().map((item) => [item.to, item.access]))
-  assert.equal(byPath['/services'], 'public')
-  assert.equal(byPath['/account'], 'signed-in')
   assert.deepEqual(byPath['/admin/hotels'], ['ADMIN'])
-  assert.equal(byPath['/admin/rooms'], undefined, 'finished screens are not planned routes')
+  for (const finished of ['/admin/rooms', '/rooms', '/services', '/suggestions', '/account'])
+    assert.equal(byPath[finished], undefined, `${finished} is a finished screen, not a planned route`)
 })
 
 test('menu paths are unique and planned entries explain what they will do', () => {

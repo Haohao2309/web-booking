@@ -11,6 +11,10 @@ import RoomListPage from '../features/rooms/pages/RoomListPage'
 import AdminRoomsPage from '../features/rooms/pages/AdminRoomsPage'
 import BookingListPage from '../features/booking/pages/BookingListPage'
 import BookingDetailPage from '../features/booking/pages/BookingDetailPage'
+import AccountPage from '../features/account/pages/AccountPage'
+import SearchRoomsPage from '../features/catalog/pages/SearchRoomsPage'
+import RoomDetailPage from '../features/catalog/pages/RoomDetailPage'
+import CatalogListPage from '../features/catalog/pages/CatalogListPage'
 import { STAFF_ROLES } from '../constants'
 import { plannedRoutes } from '../constants/navigation'
 
@@ -31,6 +35,11 @@ export default function AppRoutes() {
       <Route path="login" element={<LoginPage />} />
       <Route path="register" element={<RegisterPage />} />
       <Route path="forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="rooms" element={<SearchRoomsPage />} />
+      <Route path="rooms/:id" element={<RoomDetailPage />} />
+      <Route path="services" element={<CatalogListPage kind="services" />} />
+      <Route path="suggestions" element={<CatalogListPage kind="suggestions" />} />
+      <Route element={<PrivateRoute />}><Route path="account" element={<AccountPage />} /></Route>
       <Route element={<PrivateRoute roles={['CUSTOMER']} />}><Route path="bookings" element={<BookingListPage />} /></Route>
       <Route element={<PrivateRoute />}><Route path="bookings/:id" element={<BookingDetailPage />} /></Route>
       <Route element={<PrivateRoute roles={STAFF_ROLES} />}><Route path="reception" element={<BookingListPage staff />} /></Route>
