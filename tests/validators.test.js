@@ -1,7 +1,17 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { validateStay } from '../src/utils/validators.js'
+import { validateNewPassword, validateStay } from '../src/utils/validators.js'
 import { today } from '../src/utils/formatDate.js'
+test('new password follows the backend limits', () => {
+  assert.equal(validateNewPassword('new-password-1', 'new-password-1'), '')
+  assert.notEqual(validateNewPassword('short', 'short'), '')
+  assert.notEqual(validateNewPassword('new-password-1', 'new-password-2'), '')
+  // 40 Vietnamese characters with tone marks are under 72 characters but over 72 UTF-8 bytes.
+  const accented = 'ệ'.repeat(40)
+  assert.notEqual(validateNewPassword(accented, accented), '')
+  assert.equal(validateNewPassword('a'.repeat(72), 'a'.repeat(72)), '')
+  assert.notEqual(validateNewPassword('a'.repeat(73), 'a'.repeat(73)), '')
+})
 test('accepts a stay starting today', () => {
   const next = new Date(`${today()}T00:00:00Z`)
   next.setUTCDate(next.getUTCDate() + 1)
