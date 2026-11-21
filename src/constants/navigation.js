@@ -7,9 +7,10 @@ import { STAFF_ROLES } from './index.js'
 const SIGNED_IN = 'SIGNED_IN'
 
 export const MAIN_MENU = [
-  { to: '/', label: 'Phòng', end: true, ready: true },
-  { to: '/services', label: 'Dịch vụ', ready: false, description: 'Xem dịch vụ đi kèm của từng khách sạn (ăn sáng, đưa đón…) và thêm vào đơn đặt phòng.' },
-  { to: '/suggestions', label: 'Điểm đến gần', ready: false, description: 'Gợi ý địa điểm ăn uống, tham quan quanh khách sạn.' },
+  { to: '/', label: 'Trang chủ', end: true, ready: true },
+  { to: '/rooms', label: 'Tìm phòng', ready: true },
+  { to: '/services', label: 'Dịch vụ', ready: true },
+  { to: '/suggestions', label: 'Điểm đến gần', ready: true },
   { to: '/bookings', label: 'Đặt phòng của tôi', roles: ['CUSTOMER'], ready: true },
   { to: '/reception', label: 'Lễ tân', roles: STAFF_ROLES, ready: true },
 ]
@@ -24,7 +25,7 @@ export const ADMIN_MENU = [
 ]
 
 export const ACCOUNT_MENU = [
-  { to: '/account', label: 'Tài khoản của tôi', roles: SIGNED_IN, ready: false, description: 'Sửa họ tên, số điện thoại và đổi mật khẩu.' },
+  { to: '/account', label: 'Tài khoản của tôi', roles: SIGNED_IN, ready: true },
 ]
 
 export function canSee(item, role) {

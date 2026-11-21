@@ -16,5 +16,9 @@ export const useAuthStore = create((set) => ({
   },
   login: async (data) => { const user = validUser(await authApi.login(data)); set({ user, sessionError: '' }); return user },
   logout: async () => { await authApi.logout(); set({ user: null }) },
+  // After a profile edit: keep the header in sync with what the server saved.
+  updateUser: (user) => set({ user: validUser(user) }),
+  // After a password change the backend has already ended every session; drop it locally too.
+  endSession: () => set({ user: null }),
 }))
 window.addEventListener('auth:expired', () => useAuthStore.setState({ user: null }))
