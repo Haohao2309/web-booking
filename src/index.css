@@ -117,6 +117,14 @@ main { max-width: none; padding: 0 72px 40px; }
 .search input { border: 0; padding: 4px 0; color: #123f35; }
 .search button { height: 64px; border-radius: 16px; background: #176258; }
 .location-list { margin: 0 0 72px; padding: 0; border: 0; background: transparent; }
+.home-section { margin-bottom: 72px; }
+.home-section .section-heading p { color: #526b62; margin: 0 0 20px; }
+.destination-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.destination-card { display: block; min-height: 150px; padding: 0 18px 14px; overflow: hidden; border: 1px solid #dce8e1; border-radius: 16px; text-align: left; background: #fff; color: #123f35; }
+.destination-card:hover, .destination-card.selected { background: #fff; color: #123f35; transform: translateY(-2px); }
+.destination-image { display: block; height: 86px; margin: 0 -18px 14px; background: #c9ead8; }
+.destination-card strong, .destination-card small { display: block; }
+.destination-card small { margin-top: 5px; color: #526b62; font-size: 13px; font-weight: 400; }
 .location-list h2, .section-heading h2 { color: #123f35; font-size: 28px; margin: 0 0 4px; }
 .location-list p { margin: 0 0 20px; }
 .location-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
@@ -133,4 +141,4 @@ main { max-width: none; padding: 0 72px 40px; }
 .room-body strong { color: #176258; margin: 14px 0 0; }
 footer { margin: 0 -72px; padding: 20px 72px; min-height: 60px; color: #c9ead8; background: #123f35; }
 footer span { color: #c9ead8; }
-@media (max-width: 850px) { .nav { padding: 16px 24px; } main { padding: 0 24px 40px; } .hero { margin: 0 -24px; padding: 44px 24px 100px; } .search { grid-template-columns: 1fr 1fr; margin-bottom: 56px; } .location-chips, .grid { grid-template-columns: repeat(2, 1fr); } footer { margin: 0 -24px; padding: 20px 24px; } }
+@media (max-width: 850px) { .nav { padding: 16px 24px; } main { padding: 0 24px 40px; } .hero { margin: 0 -24px; padding: 44px 24px 100px; } .search { grid-template-columns: 1fr 1fr; margin-bottom: 56px; } .location-chips, .destination-grid, .grid { grid-template-columns: repeat(2, 1fr); } footer { margin: 0 -24px; padding: 20px 24px; } }
